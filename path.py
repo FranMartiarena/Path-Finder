@@ -5,8 +5,6 @@ import tkinter as tk
 from tkinter import StringVar
 from tkinter import OptionMenu
 
-root= tk.Tk()
-
 
 all_paths = []
 all_paths2 = []
@@ -14,6 +12,7 @@ invalids = []
 obs = []
 all_pos = []
 contador = 0
+repes = []
 
 
 class StartPoint():
@@ -196,27 +195,22 @@ class StartPoint():
 
         for move in all_paths[sum]:
 
-
-            if move == "L" :
-                pygame.draw.rect(surface, (0,0,255), (self.pos[0]*dis+1, self.pos[1]*dis+1, dis-1, dis-1))
+            if move[-1] == "L" :
                 self.pos[0] -= 1
 
 
-            elif move == "R":
-                pygame.draw.rect(surface, (0,0,255), (self.pos[0]*dis+1, self.pos[1]*dis+1, dis-1, dis-1))
+            elif move[-1] == "R":
                 self.pos[0] += 1
 
 
-            elif move == "U":
-                pygame.draw.rect(surface, (0,0,255), (self.pos[0]*dis+1, self.pos[1]*dis+1, dis-1, dis-1))
+            elif move[-1] == "U":
                 self.pos[1] -= 1
 
 
-            elif move == "D":
-                pygame.draw.rect(surface, (0,0,255), (self.pos[0]*dis+1, self.pos[1]*dis+1, dis-1, dis-1))
+            elif move[-1] == "D":
                 self.pos[1] += 1
-
-            #print("Este es el movimiento: ", move, "de el camino ", all_paths[sum], "pos: ", self.pos)
+            pygame.draw.rect(surface, (0,0,255), (self.pos[0]*dis+1, self.pos[1]*dis+1, dis-1, dis-1))
+        #print("Este es el camino: ", all_paths[sum], "que termina en ", self.pos)
 
         pygame.draw.rect(surface, (255,69,0), (self.pos[0]*dis+1, self.pos[1]*dis+1, dis-1, dis-1))
         pygame.display.flip()
@@ -435,12 +429,16 @@ def main():
 
     pass
 
+
+root= tk.Tk()
 ask_display = tk.Canvas(root, width = 400, height = 300)
 ask_display.pack()
 entry1 = tk.Entry (root)
 ask_display.create_window(200, 100, window=entry1)
-label1 = tk.Label(root, text="Type the amount of obstacles to put")
+label1 = tk.Label(root, text="Type the amount of obstacles to put:")
 ask_display.create_window(200, 50, window=label1)
+label2 = tk.Label(root, text="Select the grid's size:")
+ask_display.create_window(200, 150, window=label2)
 def get_input():
     global rows, obstaculos
     x1 = int(entry1.get())
@@ -458,7 +456,7 @@ def get_input():
     elif x2 == "Medium" and x1 < 150:
         rows = 20
         root.destroy()
-    elif x2 == "Large" and x1 < 400:
+    elif x2 == "Large(slower)" and x1 < 400:
         rows = 50
         root.destroy()
     else:
@@ -468,7 +466,7 @@ def get_input():
 
 variable = StringVar(root)
 variable.set("Small")
-menu = OptionMenu(root, variable, "Small", "Medium", "Large")
+menu = OptionMenu(root, variable, "Small", "Medium", "Large(slower)")
 ask_display.create_window(200, 200, window=menu)
 button1 = tk.Button(text='Submit', command=get_input)
 ask_display.create_window(200, 275, window=button1)
