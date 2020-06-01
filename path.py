@@ -154,10 +154,10 @@ class StartPoint():
                     pygame.draw.rect(surface, (0,0,0), ((oposx)*dis+1, (oposy)*dis+1, dis-1, dis-1 ))
                     pygame.display.flip()
 
-                    if [oposx,oposy] not in obs:
+                    if [oposx,oposy] not in invalids:
                         invalids.append([oposx,oposy])
                         obs.append([oposx,oposy])
-
+                        #print("Agregue ",[oposx,oposy]," a ",obs," y a ",invalids)
                     if [oposx,oposy] == [sposx,sposy] or [oposx,oposy] == [eposx,eposy]:
                         print("NO SE PUEDE TAPAR LA ENTRADA NI SALIDA")
                         self.invalid_pos()
@@ -218,6 +218,7 @@ class StartPoint():
 
 
     def draw_correct_path(self, surface, right_path):
+        all_paths2.clear()
         surface.fill((255,255,255))
         while True:
             drawGrid(surface)
@@ -289,10 +290,11 @@ class StartPoint():
                 self.pos[1] += 1
 
 
-        if self.pos in invalids:
+        if self.pos in invalids or self.pos in obs:
             return False
         else:
             invalids.append(self.pos.copy())
+            all_pos.append(self.pos.copy())
             #self.draw_path(self.pos)
             #self.pos = self.ppos#so as to connect with end
             #print(invalids)
@@ -323,7 +325,6 @@ class StartPoint():
 
             if self.pos == EndPoint().pos:
                 print("Este es el ganador: ", path, "con posicion ",self.pos)
-                #print(all_paths)
                 right_path.append(path)
                 self.draw_correct_path(surface, right_path)
             all_paths2.remove(path)
@@ -350,7 +351,7 @@ class StartPoint():
             #print(self.pos, put)
             for x in ["L","R","U","D"]:
                 put = add + x
-                if self.valid_move(put) and put not in all_paths:
+                if self.valid_move(put):
                     all_paths.append(put)
                     all_paths2.append(put)
                     #self.path.append(put)
@@ -359,9 +360,6 @@ class StartPoint():
                     nums.put(put)
 
                     sum += 1
-
-
-
 
 class EndPoint():
 
